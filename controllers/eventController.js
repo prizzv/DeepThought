@@ -1,22 +1,24 @@
-const { findEventById, insertEvent, modifyEvent, deleteEventById } = require('../db');
+const { findEvents, findPaginatedEvents, insertEvent, modifyEvent, deleteEventById, } = require('../db');
 
 // Display the event data 
 const getEventData = async (req, res, next) => {
     const { id } = req.query;
     const { type, limit, page } = req.query;
+    //type - sort by type
+    //limit - number of results per page
+    //page - use skip with page-1 to get the results
 
+    if (type != undefined && limit != undefined && page != undefined) {
 
-    if (id != undefined) {
-
-        const result = await findEventById(id)
-        console.log(result);
-        return res.json(result);
-    } else if (type != undefined && limit != undefined && page != undefined) {
-
-        return res.send("type, limit and page provided");
+        const result = await findPaginatedEvents(type, limit, page);
+        // console.log(result);
+        return res.json({ result });
     }
 
-    res.send("No query parameters provided");
+    //returns all events if no id specified
+    const result = await findEvents(id)
+    // console.log(result);
+    return res.json({ result });
 };
 
 // Create a new event
@@ -65,8 +67,8 @@ const deleteEvent = async (req, res, next) => {
     result = await deleteEventById(id);
     console.log(result);
 
-    if(result.deletedCount === 1){
-        
+    if (result.deletedCount === 1) {
+
         return res.json({ message: `Deleted event successfully` });
     }
 
