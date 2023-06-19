@@ -1,4 +1,4 @@
-const { findEventById, insertEvent } = require('../db');
+const { findEventById, insertEvent, modifyEvent, deleteEventById } = require('../db');
 
 // Display the event data 
 const getEventData = async (req, res, next) => {
@@ -26,7 +26,7 @@ const createEvent = async (req, res, next) => {
     if (req.file) {
         const image = req.file.path;
 
-        doc = { name, tagline, schedule, description, moderator, category, sub_category, rigor_rank, image }
+        doc = { name, tagline, schedule, description, image, moderator, category, sub_category, rigor_rank }
         // console.log(doc);
 
         result = await insertEvent(doc);
@@ -38,6 +38,39 @@ const createEvent = async (req, res, next) => {
     res.status(400).json({ message: "Incomplete data provided" });
 }
 
+//update event by taking id as parameter
+const updateEvent = async (req, res, next) => {
+    const id = req.params;
+    //TODO: delete image from uploads folder by finding the old image path
+    const { name, tagline, schedule, description, moderator, category, sub_category, rigor_rank } = req.body;
+    if (req.file) {
+        const image = req.file.path;
 
+        doc = { name, tagline, schedule, description, image, moderator, category, sub_category, rigor_rank }
+        // console.log(doc);
 
-module.exports = { createEvent, getEventData, updateEvent };
+        result = await modifyEvent(id, doc);
+        console.log(result);
+
+        return res.json({ message: `Updated event data successfully with id ` });
+    }
+
+    res.status(400).json({ message: "Incomplete data provided" });
+}
+
+const deleteEvent = async (req, res, next) => {
+    const id = req.params;
+    //TODO: delete image from uploads folder by finding the old image path
+
+    result = await deleteEventById(id);
+    console.log(result);
+
+    if(result.deletedCount === 1){
+        
+        return res.json({ message: `Deleted event successfully` });
+    }
+
+    res.status(400).json({ message: "Incomplete data provided" });
+}
+
+module.exports = { createEvent, getEventData, updateEvent, deleteEvent };

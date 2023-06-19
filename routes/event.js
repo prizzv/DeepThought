@@ -10,5 +10,6 @@ router.get('/events', EventController.getEventData);
 
 router.post('/events', upload.single('image'), EventController.createEvent);
 router.put('/events/:id', upload.single('image'), EventController.updateEvent);
+router.delete('/events/:id', EventController.deleteEvent);
 
 module.exports = router;
