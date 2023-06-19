@@ -52,7 +52,7 @@ const updateEvent = async (req, res, next) => {
         // console.log(doc);
 
         result = await modifyEvent(id, doc);
-        console.log(result);
+        // console.log(result);
 
         return res.json({ message: `Updated event data successfully with id ` });
     }
@@ -65,7 +65,7 @@ const deleteEvent = async (req, res, next) => {
     //TODO: delete image from uploads folder by finding the old image path
 
     result = await deleteEventById(id);
-    console.log(result);
+    // console.log(result);
 
     if (result.deletedCount === 1) {
 
